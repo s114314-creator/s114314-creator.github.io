@@ -79,9 +79,8 @@
     <div style="font-size:18px; padding:10px 20px; border:2px solid #333; background:#fff;">
       分數：<span id="score">0</span>
     </div>
-    <button id="stopBtn" style="font-size:16px; padding:10px 20px; cursor:pointer;">
-      停止遊戲
-    </button>
+    <button id="stopBtn" style="font-size:16px; padding:10px 20px; cursor:pointer;">停止遊戲</button>
+    <button id="restartBtn" style="font-size:16px; padding:10px 20px; cursor:pointer;">重新開始</button>
   </div>
 
   <div class="game">
@@ -104,6 +103,7 @@
   const moles = document.querySelectorAll('.mole');
   const scoreEl = document.getElementById('score');
   const stopBtn = document.getElementById('stopBtn');
+  const restartBtn = document.getElementById('restartBtn');
   const sound = document.getElementById('hitSound');
 
   let current = -1;
@@ -142,7 +142,24 @@
 
   stopBtn.addEventListener('click', () => {
     clearInterval(timer);
+    timer = null;
     moles.forEach(m => m.style.display = 'none');
+  });
+    moles.forEach(m => m.style.display = 'none');
+  });
+
+  restartBtn.addEventListener('click', () => {
+    // 重置狀態
+    score = 0;
+    scoreEl.textContent = score;
+    current = -1;
+
+    moles.forEach(m => m.style.display = 'none');
+
+    if (timer) {
+      clearInterval(timer);
+    }
+    startGame();
   });
 
   startGame();

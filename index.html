@@ -10,53 +10,74 @@
   </body>
 </html>
 <!DOCTYPE html>
-margin-top: 40px;
-}
-
-
-.hole {
-width: 120px;
-height: 120px;
-background: #8b5a2b;
-border-radius: 50%;
-position: relative;
-overflow: hidden;
-}
-
-
-.mole {
 width: 100px;
 height: 100px;
-background: #555;
+background: #8b5a2b;
 border-radius: 50%;
 position: absolute;
-bottom: -100px;
-left: 10px;
-transition: bottom 0.3s;
+bottom: -110px;
+left: 20px;
+transition: bottom 0.25s;
 cursor: pointer;
 }
 
 
+/* 地鼠臉 */
+.mole::before,
+.mole::after {
+content: '';
+position: absolute;
+top: 30px;
+width: 12px;
+height: 12px;
+background: black;
+border-radius: 50%;
+}
+
+
+.mole::before {
+left: 28px; /* 左眼 */
+}
+
+
+.mole::after {
+right: 28px; /* 右眼 */
+}
+
+
+/* 鼻子 */
+.nose {
+position: absolute;
+width: 10px;
+height: 8px;
+background: pink;
+border-radius: 50%;
+top: 50px;
+left: 45px;
+}
+
+
+/* 地鼠冒出 */
 .hole.up .mole {
-bottom: 10px;
+bottom: 15px;
 }
 </style>
 </head>
 <body>
 <h1>🐹 打地鼠遊戲</h1>
-<p>點擊地鼠把牠打回洞裡！</p>
+<p>看到地鼠就點擊牠！</p>
 
 
 <div class="game">
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
-<div class="hole"><div class="mole"></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
+<div class="hole"><div class="mole"><div class="nose"></div></div></div>
 </div>
 
 
@@ -70,8 +91,7 @@ const sound = document.getElementById('hitSound');
 
 
 function randomHole() {
-const index = Math.floor(Math.random() * holes.length);
-return holes[index];
+return holes[Math.floor(Math.random() * holes.length)];
 }
 
 
@@ -82,7 +102,7 @@ hole.classList.add('up');
 
 setTimeout(() => {
 hole.classList.remove('up');
-}, 800);
+}, 900);
 }
 
 

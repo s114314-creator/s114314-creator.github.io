@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>打地鼠（超穩定新手版）</title>
+  <title>打地鼠遊戲（完整版）</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +14,6 @@
       margin-top: 20px;
     }
 
-    /* 遊戲區 */
     .game {
       display: grid;
       grid-template-columns: repeat(3, 120px);
@@ -23,7 +22,6 @@
       margin-top: 30px;
     }
 
-    /* 洞（格子一定看得到） */
     .hole {
       width: 120px;
       height: 120px;
@@ -32,7 +30,6 @@
       position: relative;
     }
 
-    /* 地鼠 */
     .mole {
       width: 80px;
       height: 80px;
@@ -41,11 +38,10 @@
       position: absolute;
       bottom: 10px;
       left: 20px;
-      display: none; /* 預設不顯示 */
+      display: none;
       cursor: pointer;
     }
 
-    /* 眼睛 */
     .eye {
       width: 8px;
       height: 8px;
@@ -58,7 +54,6 @@
     .eye.left { left: 22px; }
     .eye.right { right: 22px; }
 
-    /* 鼻子 */
     .nose {
       width: 8px;
       height: 6px;
@@ -96,74 +91,63 @@
   </div>
 
   <audio id="hitSound">
-  <source src="https://www.soundjay.com/buttons/sounds/button-09.mp3" type="audio/mpeg">
-</audio>
+    <source src="https://www.soundjay.com/buttons/sounds/button-09.mp3" type="audio/mpeg">
+  </audio>
 
-<script>
-  const moles = document.querySelectorAll('.mole');
-  const scoreEl = document.getElementById('score');
-  const stopBtn = document.getElementById('stopBtn');
-  const restartBtn = document.getElementById('restartBtn');
-  const sound = document.getElementById('hitSound');
+  <script>
+    const moles = document.querySelectorAll('.mole');
+    const scoreEl = document.getElementById('score');
+    const stopBtn = document.getElementById('stopBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const sound = document.getElementById('hitSound');
 
-  let current = -1;
-  let score = 0;
-  let timer = null;
+    let current = -1;
+    let score = 0;
+    let timer = null;
 
-  function showMole() {
-    // 全部藏起來
-    moles.forEach(m => m.style.display = 'none');
-
-    // 隨機選一隻地鼠
-    let next;
-    do {
-      next = Math.floor(Math.random() * moles.length);
-    } while (next === current); // 避免連續同一隻
-
-    current = next;
-    moles[current].style.display = 'block';
-  }
-
-  moles.forEach(mole => {
-    mole.addEventListener('click', () => {
-      if (mole.style.display === 'block') {
-        score++;
-        scoreEl.textContent = score;
-        mole.style.display = 'none';
-        sound.currentTime = 0;
-        sound.play();
-      }
-    });
-  });
-
-  function startGame() {
-    timer = setInterval(showMole, 800);
-  }
-
-  stopBtn.addEventListener('click', () => {
-    clearInterval(timer);
-    timer = null;
-    moles.forEach(m => m.style.display = 'none');
-  });
-    moles.forEach(m => m.style.display = 'none');
-  });
-
-  restartBtn.addEventListener('click', () => {
-    // 重置狀態
-    score = 0;
-    scoreEl.textContent = score;
-    current = -1;
-
-    moles.forEach(m => m.style.display = 'none');
-
-    if (timer) {
-      clearInterval(timer);
+    function showMole() {
+      moles.forEach(m => m.style.display = 'none');
+      let next;
+      do {
+        next = Math.floor(Math.random() * moles.length);
+      } while (next === current);
+      current = next;
+      moles[current].style.display = 'block';
     }
-    startGame();
-  });
 
-  startGame();
-</script>
+    moles.forEach(mole => {
+      mole.addEventListener('click', () => {
+        if (mole.style.display === 'block') {
+          score++;
+          scoreEl.textContent = score;
+          mole.style.display = 'none';
+          sound.currentTime = 0;
+          sound.play();
+        }
+      });
+    });
+
+    function startGame() {
+      timer = setInterval(showMole, 800);
+    }
+
+    stopBtn.addEventListener('click', () => {
+      clearInterval(timer);
+      timer = null;
+      moles.forEach(m => m.style.display = 'none');
+    });
+
+    restartBtn.addEventListener('click', () => {
+      score = 0;
+      scoreEl.textContent = score;
+      current = -1;
+      moles.forEach(m => m.style.display = 'none');
+      if (timer) clearInterval(timer);
+      startGame();
+    });
+
+    startGame();
+  </script>
 
 </body>
 </html>

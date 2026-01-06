@@ -16,7 +16,6 @@
 
         h1 { margin-top: 20px; color: #2e7d32; }
 
-        /* 遊戲面板控制區 */
         .panel {
             display: flex;
             justify-content: center;
@@ -49,13 +48,12 @@
             box-shadow: 0 2px #d84315;
         }
 
-        /* 遊戲網格 - 表格區域 */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(3, 140px); /* 3x3 網格 */
+            grid-template-columns: repeat(3, 140px);
             gap: 20px;
             padding: 20px;
-            background: #8d6e63; /* 泥土色背景 */
+            background: #8d6e63;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
@@ -63,15 +61,14 @@
         .hole {
             width: 140px;
             height: 140px;
-            background: #5d4037; /* 深色洞穴 */
+            background: #5d4037;
             border-radius: 50%;
             position: relative;
-            overflow: hidden; /* 關鍵：裁切超出洞穴的部分 */
+            overflow: hidden;
             border: 5px solid #4e342e;
             box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
         }
 
-        /* 地鼠本體 */
         .mole {
             width: 100px;
             height: 100px;
@@ -79,17 +76,15 @@
             border-radius: 50% 50% 20% 20%;
             position: absolute;
             left: 20px;
-            top: 150px; /* 初始位置在洞穴下方（隱藏） */
-            transition: top 0.15s ease-out; /* 彈跳動畫 */
+            top: 150px;
+            transition: top 0.15s ease-out;
             cursor: pointer;
         }
 
-        /* 地鼠彈出的樣式 */
         .mole.up {
-            top: 30px; /* 彈上來的位置 */
+            top: 30px;
         }
 
-        /* 地鼠細節 */
         .eye {
             width: 10px;
             height: 10px;
@@ -98,8 +93,11 @@
             position: absolute;
             top: 30px;
         }
+
+        /* 修正位置：左眼與右眼距離邊緣對稱 */
         .eye.left { left: 25px; }
-        .eye.right { right: 65px; }
+        .eye.right { right: 25px; } /* 原本是 65px */
+
         .nose {
             width: 12px;
             height: 10px;
@@ -137,112 +135,4 @@
 
 <div class="game-grid">
     <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-    <div class="hole"><div class="mole"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div></div></div>
-</div>
-
-<div id="gameOver">
-    <div id="finalMsg"></div>
-    <button onclick="location.reload()">再玩一次</button>
-</div>
-
-<audio id="hitSound">
-    <source src="https://www.soundjay.com/buttons/sounds/button-09.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-    const moles = document.querySelectorAll('.mole');
-    const scoreEl = document.getElementById('score');
-    const timeEl = document.getElementById('time');
-    const startBtn = document.getElementById('startBtn');
-    const gameOverEl = document.getElementById('gameOver');
-    const finalMsg = document.getElementById('finalMsg');
-    const sound = document.getElementById('hitSound');
-
-    let score = 0;
-    let timeLeft = 30;
-    let gameActive = false;
-    let moleTimer;
-    let countdownTimer;
-
-    // 隨機地鼠出現
-    function peep() {
-        if (!gameActive) return;
-
-        // 隨機選一個洞
-        const idx = Math.floor(Math.random() * moles.length);
-        const mole = moles[idx];
-
-        // 確保地鼠彈出
-        mole.classList.add('up');
-        mole.clicked = false;
-
-        // 根據分數決定停留時間（越後面越快）
-        const stayTime = Math.max(500, 1200 - (score * 30));
-
-        setTimeout(() => {
-            mole.classList.remove('up');
-            if (gameActive) peep();
-        }, stayTime);
-    }
-
-    // 點擊地鼠
-    moles.forEach(mole => {
-        mole.addEventListener('mousedown', () => {
-            if (!mole.classList.contains('up') || mole.clicked) return;
-
-            mole.clicked = true;
-            score++;
-            scoreEl.textContent = score;
-            mole.classList.remove('up');
-
-            // 播放音效
-            sound.currentTime = 0;
-            sound.play().catch(() => {}); 
-        });
-    });
-
-    function startGame() {
-        if (gameActive) return; // 防止重複點擊開始
-
-        score = 0;
-        timeLeft = 30;
-        gameActive = true;
-        scoreEl.textContent = score;
-        timeEl.textContent = timeLeft;
-        gameOverEl.style.display = 'none';
-        startBtn.disabled = true;
-
-        peep();
-
-        countdownTimer = setInterval(() => {
-            timeLeft--;
-            timeEl.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                endGame();
-            }
-        }, 1000);
-    }
-
-    function endGame() {
-        gameActive = false;
-        clearInterval(countdownTimer);
-        clearTimeout(moleTimer);
-        moles.forEach(m => m.classList.remove('up'));
-        
-        gameOverEl.style.display = 'block';
-        finalMsg.innerHTML = `遊戲結束！<br>你的得分是：${score}<br><br>`;
-        startBtn.disabled = false;
-    }
-
-    startBtn.addEventListener('click', startGame);
-</script>
-
-</body>
-</html>
+    <div class="hole"><div
